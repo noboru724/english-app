@@ -559,6 +559,61 @@
       .replace(/\byou['’]ve\b/g, "you have")
       .replace(/\bthey['’]ve\b/g, "they have")
       .replace(/\bwe['’]ve\b/g, "we have")
+       // 否定形
+        .replace(/\bshouldn['’]t\b/g, "should not")
+        .replace(/\bcouldn['’]t\b/g, "could not")
+        .replace(/\bwouldn['’]t\b/g, "would not")
+        .replace(/\bdon['’]t\b/g, "do not")
+        .replace(/\bdoesn['’]t\b/g, "does not")
+        .replace(/\bdidn['’]t\b/g, "did not")
+        .replace(/\bwasn['’]t\b/g, "was not")
+        .replace(/\bweren['’]t\b/g, "were not")
+        .replace(/\bisn['’]t\b/g, "is not")
+        .replace(/\baren['’]t\b/g, "are not")
+        .replace(/\bhasn['’]t\b/g, "has not")
+        .replace(/\bhaven['’]t\b/g, "have not")
+        .replace(/\bhadn['’]t\b/g, "had not")
+
+        // have 系
+        .replace(/\bshould['’]ve\b/g, "should have")
+        .replace(/\bcould['’]ve\b/g, "could have")
+        .replace(/\bwould['’]ve\b/g, "would have")
+
+        // be動詞系
+        .replace(/\bi['’]m\b/g, "i am")
+        .replace(/\byou['’]re\b/g, "you are")
+        .replace(/\bhe['’]s\b/g, "he is")
+        .replace(/\bshe['’]s\b/g, "she is")
+        .replace(/\bit['’]s\b/g, "it is")
+        .replace(/\bwe['’]re\b/g, "we are")
+        .replace(/\bthey['’]re\b/g, "they are")
+
+        // have/has/had 系
+        .replace(/\bi['’]ve\b/g, "i have")
+        .replace(/\byou['’]ve\b/g, "you have")
+        .replace(/\bwe['’]ve\b/g, "we have")
+        .replace(/\bthey['’]ve\b/g, "they have")
+        .replace(/\bhe['’]s\b/g, "he has")
+        .replace(/\bshe['’]s\b/g, "she has")
+        .replace(/\bit['’]s\b/g, "it has")
+
+        // had 系
+        .replace(/\bi['’]d\b/g, "i had")
+        .replace(/\byou['’]d\b/g, "you had")
+        .replace(/\bhe['’]d\b/g, "he had")
+        .replace(/\bshe['’]d\b/g, "she had")
+        .replace(/\bwe['’]d\b/g, "we had")
+        .replace(/\bthey['’]d\b/g, "they had")
+
+        // will 系
+        .replace(/\bi['’]ll\b/g, "i will")
+        .replace(/\byou['’]ll\b/g, "you will")
+        .replace(/\bhe['’]ll\b/g, "he will")
+        .replace(/\bshe['’]ll\b/g, "she will")
+        .replace(/\bit['’]ll\b/g, "it will")
+        .replace(/\bwe['’]ll\b/g, "we will")
+        .replace(/\bthey['’]ll\b/g, "they will")
+
       .trim()
       .replace(/\s+/g, " "); // 余分な空白を統一
 
@@ -623,6 +678,10 @@
    
 
     function endQuiz() {
+      
+      const totalCorrect = answersLog.filter(a => a.result === "正解").length;
+      
+
       questionEl.textContent = 'お疲れさまでした！全20問が終了しました。';
       progressEl.textContent = '';
       answerEl.style.display = 'none';
@@ -630,22 +689,27 @@
       nextBtn.style.display = 'none';
       feedbackEl.textContent = '';
 
-      let tableHTML = '<table><tr><th>出題文（日本語）</th><th>あなたの解答</th><th>正解英文</th></tr>';
+      let tableHTML = `<p style="font-size:1.2em; font-weight:bold;">結果：20問中 ${totalCorrect}問正解！</p>`;
+      
+      tableHTML += '<table><tr><th>出題文（日本語）</th><th>あなたの解答</th><th>正解英文</th><th>結果</th></tr>';
+
       answersLog.forEach(a => {
-        tableHTML += `<tr><td>${a.jp}</td><td>${a.user}</td><td>${a.correct}</td></tr>`;
+        const mark = a.result === "正解" ? "🟢" : "❌";
+        tableHTML += `<tr>
+          <td>${a.jp}</td>
+          <td>${a.user}</td>
+          <td>${a.correct}</td>
+          <td class="mark">${mark}</td>
+        </tr>`;
       });
       tableHTML += '</table>';
       resultEl.innerHTML = tableHTML;
 
-       // 「もう一度する」ボタン作成
-  const retryBtn = document.createElement('button');
-  retryBtn.textContent = "もう一度する";
-  retryBtn.style.marginTop = "15px";
-  retryBtn.onclick = () => {
-    resetQuiz();
-  };
-  resultEl.appendChild(retryBtn);
-
+      const retryBtn = document.createElement('button');
+      retryBtn.textContent = "もう一度する";
+      retryBtn.style.marginTop = "15px";
+      retryBtn.onclick = resetQuiz;
+      resultEl.appendChild(retryBtn);
     }
 
 
